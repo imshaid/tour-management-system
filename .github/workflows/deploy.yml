@@ -1,0 +1,34 @@
+name: Deploy Tour Management System
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # Optional: Add linting/tests here
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          cd backend
+          pip install -r requirements.txt
+      - name: Check syntax
+        run: |
+          cd backend
+          python -m py_compile main.py database.py
+          echo "✅ Backend syntax OK"
+
+  # Render auto-deploys from GitHub when connected
+  # Vercel/Netlify auto-deploys from GitHub when connected
+  notify:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy notification
+        run: echo "✅ Build passed. Render/Vercel will auto-deploy."
